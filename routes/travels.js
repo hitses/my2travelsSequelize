@@ -3,21 +3,21 @@ var express = require('express');
 var router  = express.Router();
 const travelsController = require('../controllers/travels');
 
-router.post('/', async (req, res) => {
-  let {country, imgURL, price, discount, creator} = req.body;
-  let isAdded = await travelsController.createTravels(country, imgURL, price, discount, creator);
+router.post('/add', async (req, res) => {
+  let {destiny, img, price, discount, UserId} = req.body;
+  let isAdded = await travelsController.createTravels(destiny, img, price, discount, UserId);
   if(isAdded){
-    res.redirect('/travels');
+    res.redirect('/');
   } else{
     req.flash('error', 'El viaje no se ha podido añadir.');
-    res.redirect('/travels');
+    res.redirect('/');
   };
 });
 
-router.get('/', async(req, res) => {
+router.get('/add', async(req, res) => {
   let travels = await travelsController.getTravels();
 
-  res.render('travels/travels', {
+  res.render('travels/add', {
     travels,
   });
 })

@@ -1,11 +1,14 @@
 <p>Holiii</p>
 
-{{#with travels}}
-  {{#foreach}}
-    <h1>{{country}}</h1>
-    <p>
-      El viaje a {{country}} ha sido añadido correctamente.
-      Su precio es de {{price}}€ y tiene un descuento de {{discount}}.
-    </p>
-  {{/foreach}}
-{{/with}}
+{{#if error}}
+    <p>ERROR: {{error}}</p>
+{{/if}}
+<form action="/travels/add" method="post">
+    <input type="text" name="destiny" placeholder="Destino">
+    <input type="text" name="img" placeholder="URL de la imagen">
+    <input type="number" name="price" placeholder="Precio">
+    <input type="number" name="discount" placeholder="Descuento">
+    <input type="text" name="UserId" placeholder="Usuario">
+    <button type="submit">Registrar</button>
+</form>
+<a href="/">Página principal</a>

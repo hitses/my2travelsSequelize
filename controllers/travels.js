@@ -1,20 +1,23 @@
 const CONN = require('../helpers/dbConnection');
 const models = require('../models')
 
-function createTravels(){
+async function createTravels(destiny, img, price, discount, UserId){
   return models.Travel.create({
-    country,
-    imgURL,
+    destiny,
+    img,
     price,
     discount,
-    creator,
+    UserId,
   })
 };
 
 function getTravels(){
-  return models.Travel.findAll();
-};
-
+  return models.Travel.findAll({
+    include: [{
+      model: models.User
+    }]
+  })
+}
 module.exports = {
   createTravels,
   getTravels

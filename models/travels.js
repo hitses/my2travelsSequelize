@@ -1,12 +1,15 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Travel = sequelize.define('Travel', {
-    country: DataTypes.STRING,
-    imgURL: DataTypes.STRING,
+    destiny: DataTypes.STRING,
+    img: DataTypes.STRING,
     price: DataTypes.DECIMAL,
     discount: DataTypes.INTEGER,
-    creator: DataTypes.STRING,
   });
 
+  Travel.associate = function (models) {
+    models.Travel.belongsTo(models.User)
+  };
+  
   return Travel;
 };

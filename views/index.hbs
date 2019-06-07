@@ -3,11 +3,12 @@
 
 <a href="/users/register">Regístrate</a>
 <a href="/users/login">Usuarios</a>
-<a href="/travels">viajes</a>
+<a href="/travels/add">Añadir viaje</a>
 
 {{#each travels}}
 <p>{{country}}</p>
-<img src="{{imgURL}}" alt="{{country}}">
+<img style="height: 200px;" src="{{imgURL}}" alt="{{country}}">
 <p>Viaje a {{country}} por tan solo {{price}}€</p>
 <p>El viaje tiene un {{discount}}% de descuento</p>
+<p>Creado por {{User.name}}</p>
 {{/each}}

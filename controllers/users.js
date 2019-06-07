@@ -13,19 +13,22 @@ async function register(name, username, email, password){
   })
 }
 
+// dos funciones con el mismo nombre?
+//Quieres encontrar todos los usuarios o uno?
+// findOne
+// clausula where en el findall/findOne
 function checkLogin(email, password){
-  return new Promise((resolve, reject) => {
-      const selectQuery = 'SELECT * FROM users WHERE email = ?';
-      CONN.query(selectQuery, [email], (err, users) => {
-          if(users.length !== 0){
-              resolve(null)
-          }else{
-              // Comparar contraseñas
-              bcrypt.compare(password, users[0].password, (err, match) => {
-                  resolve( match ? users[0] : null);
-              })
-          }
-      })
+   return models.User.findOne({
+     where: {email: email}.then(User => {
+      if(User.length !== 0){
+        resolve(null)
+    }else{
+        bcrypt.compare(password, users[0].password, (err, match) => {
+            resolve( match ? users[0] : null);
+        })
+        resizeBy.send('/')
+    }
+    })
   })
 }
 
