@@ -1,14 +1,16 @@
 <h1>{{title}}</h1>
 <p>Bienvenido a {{title}}</p>
 
+<a href="/">Página principal</a>
 <a href="/users/register">Regístrate</a>
-<a href="/users/login">Usuarios</a>
+<a href="/users/login">Iniciar sesión</a>
 <a href="/travels/add">Añadir viaje</a>
+<a href="/mail">Enviar mail</a>
 
 {{#each travels}}
-<p>{{destiny}}</p>
-<img style="height: 200px;" src="{{img}}" alt="{{destiny}}">
-<p>Viaje a {{destiny}} por tan solo {{price}}€</p>
-<p>El viaje tiene un {{discount}}% de descuento</p>
-<p>Creado por {{User.name}}</p>
+  <p>{{destiny}}</p>
+  <img style="height: 200px;" src="{{img}}" alt="{{destiny}}">
+  <p>Viaje a {{destiny}} por tan solo {{price}}€</p>
+  <p>El viaje tiene un {{discount}}% de descuento</p>
+  <p>Creado por {{User.name}}</p>
 {{/each}}

@@ -7,12 +7,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: 'actions_unique',
     },
+    activate: {
+      type: DataTypes.ENUM('noActivated', 'activated'),
+      defaultValue: 'noActivated',
+    },
     password: DataTypes.TEXT,
-    rol: DataTypes.ENUM('admin', 'user')
+    rol: {
+      type: DataTypes.ENUM('user', 'admin'),
+      defaultValue: 'user',
+    }
   });
 
   User.associate = function(models) {
     models.User.hasMany(models.Travel);
+  };
+  
+  User.associate = function(models) {
+    models.User.hasOne(models.ActivationCode);
   };
 
   return User;

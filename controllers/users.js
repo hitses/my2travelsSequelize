@@ -5,12 +5,17 @@ const SALT_ROUNDS = 10;
 
 async function register(name, username, email, password){
   let hash = await bcrypt.hash(password, SALT_ROUNDS );
-   return models.User.create({
+  return models.User.create({
     name,
     username,
     email,
     password: hash,
-  })
+  });
+};
+
+async function activationCode(activate){
+  let hashCode = await bcrypt.hash(activate, SALT_ROUNDS);
+  return hashCode;
 }
 
 async function checkLogin(email, password){
@@ -23,10 +28,11 @@ async function checkLogin(email, password){
   } else{
     let match = await bcrypt.compare(password, user[0].password);
     return match ? user[0] : null;
-  }
-}
+  };
+};
 
 module.exports = {
   register,
-  checkLogin
-}
+  checkLogin,
+  activationCode,
+};

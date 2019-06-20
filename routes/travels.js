@@ -1,8 +1,11 @@
 var express = require('express');
 var router  = express.Router();
-const travelsController = require('../controllers/travels');
 
-router.post('/add', async (req, res) => {
+const travelsController = require('../controllers/travels');
+const { isLogged } = require('../middlewares/isLogged');
+
+router.post('/add', isLogged, async (req, res) => {
+  console.log('hola');
   let {destiny, img, price, discount, UserId} = req.body;
   let isAdded = await travelsController.createTravels(destiny, img, price, discount, UserId);
   if(isAdded){
@@ -13,7 +16,7 @@ router.post('/add', async (req, res) => {
   };
 });
 
-router.get('/add', async(req, res) => {
+router.get('/add', isLogged, async(req, res) => {
   let travels = await travelsController.getTravels();
 
   res.render('travels/add', {

@@ -1,14 +1,21 @@
 var express = require('express');
 var router = express.Router();
 var usersController = require('../controllers/users');
+var hbs = require('nodemailer-express-handlebars');
+var activationEmail = require('../config/emailConf')
+var { activationCode } = require('../controllers/users');
 
 router.post('/login', async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
+  let active = req.session.active;
   
   if(!email || !password){
     req.flash('errors', 'Falta usuario o contraseña');
-    res.redirect('/users/login')
+    res.redirect('/users/login');
+  } else if(active === false){
+    req.flash('errors', 'No has confirmado tu cuenta de correo.');
+    res.redirect('/users/login');
   } else {
     let user = await usersController.checkLogin(email,password);
   
@@ -19,11 +26,10 @@ router.post('/login', async (req, res) => {
       req.session.logginDate = new Date();
       res.redirect('/');
     }else{
-      req.flash('errors', 'Usuario o contraseña inválido');
+      req.flash('errors', 'Correo electrónico o contraseña inválido');
       res.redirect('/users/login');
     }
   }
-
 });
 
 router.get('/login', (req, res) => {
@@ -49,6 +55,42 @@ router.post('/register', async (req, res) => {
   let isRegistered = await usersController.register(name, username, email, password);
 
   if(isRegistered){
+    let idUser = isRegistered.id;
+    const handlebarOptions = {
+      viewEngine: {
+        extname: '.hbs',
+        partialsDir: './views/email-templates/partials',
+        layoutsDir: './views/email-templates/layouts',
+        defaultLayout: 'email.body.hbs',
+      },
+      viewPath: './views/email-templates',
+      extName: '.hbs',
+    };
+  
+    activationEmail.transporter.use('compile', hbs(handlebarOptions));
+    let message = {
+      to: email,
+      subject: 'Activación de tu cuenta en My 2 Travels',
+      template: 'email',
+      context: {
+        texto: `https://localhost:3000/activate/${Date.now() + '$' + idUser}`
+      },
+      /* attachments: [
+        {
+            filename: 'redux.png',
+            path: `/Users/jeronimogascon/Desktop/Proyectos/redux.png`,
+            content: 'Archivo adjunto.',
+        },
+      ], */
+    };
+    activationEmail.transporter.sendMail(message,(error,info) =>{
+      if(error){
+          res.status(500).send(error, message);
+          return
+        }
+      activationEmail.transporter.close();
+      res.status(200).send('Respuesta "%s"' + info.response);
+    })
     res.redirect('/users/login')
   } else if(email === models.User.email){
     req.flash('error', 'El correo electrónico ya existe');
