@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       unique: 'actions_unique',
     },
     activate: {
-      type: DataTypes.ENUM('noActivated', 'activated'),
-      defaultValue: 'noActivated',
+      type: DataTypes.BOOLEAN,
+      defaultValue: 0,
     },
     password: DataTypes.TEXT,
     rol: {

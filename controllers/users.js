@@ -18,7 +18,7 @@ async function activationCode(activate){
   return hashCode;
 }
 
-async function checkLogin(email, password){
+async function checkLogin(email, password, activate){
   let user = await models.User.findAll({
     where: {
       email: email

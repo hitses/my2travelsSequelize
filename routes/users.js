@@ -8,23 +8,25 @@ var { addActivationCode } = require('../controllers/activation');
 router.post('/login', async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  let active = req.session.active;
   
   if(!email || !password){
     req.flash('errors', 'Falta usuario o contraseña');
     res.redirect('/users/login');
-  } else if(active === 'noActivated'){
-    req.flash('errors', 'No has confirmado tu cuenta de correo.');
-    res.redirect('/users/login');
   } else {
-    let user = await usersController.checkLogin(email,password);
-  
-    if(user){
+    let activate = false;
+    let user = await usersController.checkLogin(email, password, activate);
+    activate = user.activate;
+    console.log(user.activate);
+
+    if(user && activate === true){
       req.session.email = user.email;
       req.session.name = user.name;
       req.session.userId = user.id;
       req.session.logginDate = new Date();
       res.redirect('/');
+    } else if(activate === false){
+      req.flash('errors', 'La cuenta debe ser activada. Revisa tu correo y vuelve a intentarlo.');
+      res.redirect('/users/login');
     }else{
       req.flash('errors', 'Correo electrónico o contraseña inválido');
       res.redirect('/users/login');
