@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var usersController = require('../controllers/users');
 var hbs = require('nodemailer-express-handlebars');
-var activationEmail = require('../config/emailConf')
-var { activationCode } = require('../controllers/users');
+var activationEmail = require('../config/emailConf');
+var { addActivationCode } = require('../controllers/activation');
 
 router.post('/login', async (req, res) => {
   let email = req.body.email;
@@ -13,7 +13,7 @@ router.post('/login', async (req, res) => {
   if(!email || !password){
     req.flash('errors', 'Falta usuario o contraseña');
     res.redirect('/users/login');
-  } else if(active === false){
+  } else if(active === 'noActivated'){
     req.flash('errors', 'No has confirmado tu cuenta de correo.');
     res.redirect('/users/login');
   } else {
@@ -56,6 +56,12 @@ router.post('/register', async (req, res) => {
 
   if(isRegistered){
     let idUser = isRegistered.id;
+    let randomActivationCode = Date.now() + '$' + idUser;
+    let activationCode = `https://localhost:3000/activate/${randomActivationCode}`
+
+    let result = await addActivationCode(idUser, randomActivationCode);
+    console.log(result);
+
     const handlebarOptions = {
       viewEngine: {
         extname: '.hbs',
@@ -73,7 +79,7 @@ router.post('/register', async (req, res) => {
       subject: 'Activación de tu cuenta en My 2 Travels',
       template: 'email',
       context: {
-        texto: `https://localhost:3000/activate/${Date.now() + '$' + idUser}`
+        texto: activationCode,
       },
       /* attachments: [
         {
@@ -93,6 +99,7 @@ router.post('/register', async (req, res) => {
     })
     res.redirect('/users/login')
   } else if(email === models.User.email){
+    console.log(email, models.User.email);
     req.flash('error', 'El correo electrónico ya existe');
     res.redirect('/users/register');
   }else{
@@ -101,5 +108,9 @@ router.post('/register', async (req, res) => {
   }
 })
 
+router.get('/active/:code', (req, res) => {
+  res.render('users/activated', {
+  })
+})
 
 module.exports = router;

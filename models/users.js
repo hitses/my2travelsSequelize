@@ -20,9 +20,6 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function(models) {
     models.User.hasMany(models.Travel);
-  };
-  
-  User.associate = function(models) {
     models.User.hasOne(models.ActivationCode);
   };
 

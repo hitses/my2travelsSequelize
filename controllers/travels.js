@@ -1,4 +1,3 @@
-const CONN = require('../helpers/dbConnection');
 const models = require('../models')
 
 async function createTravels(destiny, img, price, discount, UserId){

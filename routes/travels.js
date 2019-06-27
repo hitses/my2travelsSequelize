@@ -5,7 +5,6 @@ const travelsController = require('../controllers/travels');
 const { isLogged } = require('../middlewares/isLogged');
 
 router.post('/add', isLogged, async (req, res) => {
-  console.log('hola');
   let {destiny, img, price, discount, UserId} = req.body;
   let isAdded = await travelsController.createTravels(destiny, img, price, discount, UserId);
   if(isAdded){
